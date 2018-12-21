@@ -11,19 +11,12 @@ addons:
     - zlib1g-dev
     - libssl-dev
     - libcryptopant-dev
-language: c
-compiler:
-  - clang
-  - gcc
-install: ./autogen.sh
+  sonarcloud:
+    organization: "dns-oarc"
+    token:
+      secure: "XouQDhoXhsoAOJuwc3DVKnuUhuwx/Ny3U4TQTG+DzzPyZVYH9gdcQ9Z/c4I5k7heEF9nlijbXPjz6wBg0XfSSVDnEuaD2SHZ23KEeshfCh3WBubS/7oGb8+fzSoM9YyxfHP+jBrST8XzsjoPN6F/R2FF32t4vwYBmfSlEqi18aI="
 script:
+  - ./autogen.sh
   - ./configure --enable-warn-all
-  - make dist
-  - tar zxvf *.tar.gz
-  - cd dnscap-[0-9]*
-  - mkdir build
-  - cd build
-  - ../configure --enable-warn-all
-  - make
-  - make test
-  - src/dnscap -h
+  - build-wrapper-linux-x86-64 --out-dir bw-output make clean all
+  - sonar-scanner
